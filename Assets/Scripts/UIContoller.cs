@@ -8,7 +8,7 @@ public class UIContoller : MonoBehaviour
 	[SerializeField] private Canvas flashCardCanvas;
 	[SerializeField] private Canvas UICanvas;
 	[SerializeField] private GameObject nextButton;
-
+	[SerializeField] private TMPro.TMP_Text uiMessage;
 
 	public void ToggleDisplayKeyPad(bool isActive)
 	{
@@ -28,5 +28,16 @@ public class UIContoller : MonoBehaviour
 	public void ToggleNext(bool isActive)
 	{
 		nextButton.SetActive(isActive);
+	}
+
+	public void DisplayMessage(string message)
+	{
+		uiMessage.text = message;
+		uiMessage.gameObject.SetActive(true);
+	}
+
+	public void DisplayMessage(bool isActive)
+	{
+		uiMessage.gameObject.SetActive(isActive);
 	}
 }
