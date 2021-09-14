@@ -37,6 +37,6 @@ public class Keypad : MonoBehaviour
 	{
 		// Reveal answer
 		outputDisplay.text = "";
-		gameController.CheckAnswer(outputDisplay.text);
+		gameController.Skip();
 	}
 }

@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour
 		uIContoller.ToggleDisplayFlashCard(true);
 		uIContoller.ToggleDisplayKeyPad(true);
 		uIContoller.ToggleNext(false);
+		uIContoller.DisplayMessage(false);
 	}
 
 	public void DisplayNextCard()
@@ -21,6 +22,8 @@ public class GameController : MonoBehaviour
 		/*FlashCard flashCard = dealer.DealFlashCard();
 		question.text = flashCard.Question;*/
 		uIContoller.ToggleNext(false);
+		uIContoller.DisplayMessage(false);
+		uIContoller.ToggleDisplayKeyPad(true);
 		answer.text = "";
 		dealer.DealFlashCard();
 	}
@@ -33,16 +36,24 @@ public class GameController : MonoBehaviour
 		uIContoller.ToggleNext(true);
 	}
 
+	public void Skip()
+	{
+		DisplayNextCard();
+		//FlipFlashCard();
+		//uIContoller.DisplayMessage(false);
+	}
+
 	public void CheckAnswer(string answer)
 	{
 		FlipFlashCard();
+		uIContoller.ToggleDisplayKeyPad(false);
 		if (answer == dealer.CurrentCard.Answer)
 		{
-			Debug.Log("Yaay you was right!");
+			uIContoller.DisplayMessage("Correct");
 		}
 		else
 		{
-			Debug.Log("wrong answer!!!");
+			uIContoller.DisplayMessage("Wrong Answer");
 		}
 	}
 
