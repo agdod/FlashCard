@@ -15,4 +15,4 @@ MonoBehaviour:
   questionImage: {fileID: 0}
   answerImage: {fileID: 0}
   question: 3 * 12
-  answer: 
+  answer: 36
