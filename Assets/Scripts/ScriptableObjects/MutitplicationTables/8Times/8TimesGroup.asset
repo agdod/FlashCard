@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 943d4bb42e621fe4398ee89ef11452a8, type: 3}
+  m_Name: 8TimesGroup
+  m_EditorClassIdentifier: 
+  identifier: 8Times
+  multipliers:
+  - {fileID: 11400000, guid: 45458fe3285642942a21e67f9eedef8d, type: 2}
+  - {fileID: 11400000, guid: 3ad31eaa2827ae942860c680900c7206, type: 2}
+  - {fileID: 11400000, guid: 7562527b40e59f746adbdceef0de9ca9, type: 2}
+  - {fileID: 11400000, guid: 90d0b28241b2586438189aadac103a4d, type: 2}
+  - {fileID: 11400000, guid: fb506f0c9f51d79448e19a0b71897383, type: 2}
+  - {fileID: 11400000, guid: 4f004b6f20832e2408054fb190adb3a6, type: 2}
+  - {fileID: 11400000, guid: 768cc4e3893511f4cb6acc7a1c4fd8aa, type: 2}
+  - {fileID: 11400000, guid: a292c54d2729d7c43b6d93b8a244b2e3, type: 2}
+  - {fileID: 11400000, guid: e2a9b88ba40b60e41b11429194b2c4d5, type: 2}
+  - {fileID: 11400000, guid: 1d5ce27faca704743ae1662f9b1437af, type: 2}
+  - {fileID: 11400000, guid: ec2affde99256a64cbbd3abe85467715, type: 2}

@@ -4,20 +4,8 @@ using UnityEngine;
 
 public class Dealer : MonoBehaviour
 {
-	[System.Serializable]
-	public class Tables
-	{
-		[SerializeField] private string identifier;
-		[SerializeField] private List<FlashCard> multipliers;
-
-		public List<FlashCard> Multipliers
-		{
-			get { return multipliers; }
-		}
-	}
-
 	[SerializeField] private TMPro.TMP_Text flashCardText;
-	[SerializeField] private List<Tables> timesTables;
+	[SerializeField] private List<Group> timesTables;
 	[SerializeField] private int totalCardCount = 0;
 
 	private List<FlashCard> flashCardStack;
@@ -65,7 +53,7 @@ public class Dealer : MonoBehaviour
 		flashCardStack = new List<FlashCard>(totalCardCount);
 
 		// Cycle trhough Tables and FlashCard list, filling Stack of Flash Cards		
-		Tables tables;
+		Group tables;
 		int timesTableCount = timesTables.Count;
 
 		for (int tableCount = 0; tableCount < timesTableCount; tableCount++)
