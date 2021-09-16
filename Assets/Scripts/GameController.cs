@@ -8,6 +8,8 @@ public class GameController : MonoBehaviour
 	//[SerializeField] private TMPro.TMP_Text question;
 	[SerializeField] private TMPro.TMP_Text answer;
 	[SerializeField] private UIContoller uIContoller;
+	[SerializeField] private IntVariable correctAnswer;
+	[SerializeField] private IntVariable skipped;
 
 	private void Start()
 	{
@@ -15,6 +17,12 @@ public class GameController : MonoBehaviour
 		uIContoller.ToggleDisplayKeyPad(true);
 		uIContoller.ToggleNext(false);
 		uIContoller.DisplayMessage(false);
+	}
+
+	public void NewGame()
+	{
+		correctAnswer.value = 0;
+		skipped.value = 0;
 	}
 
 	public void DisplayNextCard()
@@ -50,11 +58,20 @@ public class GameController : MonoBehaviour
 		if (answer == dealer.CurrentCard.Answer)
 		{
 			uIContoller.DisplayMessage("Correct");
+			correctAnswer.value++;
+
 		}
 		else
 		{
 			uIContoller.DisplayMessage("Wrong Answer");
 		}
+	}
+
+	public void GameOver()
+	{
+		// End of Deck
+		// Display Stats.
+		// Play again?
 	}
 
 }

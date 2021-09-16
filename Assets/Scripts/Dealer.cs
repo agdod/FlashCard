@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Dealer : MonoBehaviour
 {
+	[SerializeField] private GameController gameController;
 	[SerializeField] private TMPro.TMP_Text flashCardText;
 	[SerializeField] private List<Group> timesTables;
-	[SerializeField] private int totalCardCount = 0;
+	[SerializeField] private IntVariable totalCardCount;
 
 	private List<FlashCard> flashCardStack;
 	private int index = -1; // pointer for current flash card in stack
@@ -44,7 +45,7 @@ public class Dealer : MonoBehaviour
 		{
 			if (timesTables[x].IsActive == true)
 			{
-				totalCardCount += timesTables[x].Multipliers.Count;
+				totalCardCount.value += timesTables[x].Multipliers.Count;
 			}
 		}
 	}
@@ -53,7 +54,7 @@ public class Dealer : MonoBehaviour
 	{
 		// Deck is prepared and cached for use, so deck doesnt need to be repopluated if player wants to try again.
 		// Initalise the List for the FlashCardStack
-		flashCardStack = new List<FlashCard>(totalCardCount);
+		flashCardStack = new List<FlashCard>(totalCardCount.value);
 
 		// Cycle trhough Tables and FlashCard list, filling Stack of Flash Cards		
 		Group tables;
@@ -82,7 +83,7 @@ public class Dealer : MonoBehaviour
 		// Pick random location in first half, swap with random postion in second half.
 		// repeat unitl all first half has been swapped.
 
-		int deckMidPoint = totalCardCount / 2;
+		int deckMidPoint = totalCardCount.value / 2;
 
 		int lowerrHalfSwap;
 		int upperHalfSwap;
@@ -93,12 +94,12 @@ public class Dealer : MonoBehaviour
 
 		// Check for odd number of cards, if odd number of cards mid way point is odd card out.
 		// upper half will increase by one. Middle card will not get swapped.
-		if (totalCardCount % 2 != 0)
+		if (totalCardCount.value % 2 != 0)
 		{
 			upperRange = deckMidPoint + 1;
 			lowerRange = deckMidPoint - 1;
 			// Shuffle middle card
-			flashCardStack[deckMidPoint] = flashCardStack[Random.Range(0, totalCardCount)];
+			flashCardStack[deckMidPoint] = flashCardStack[Random.Range(0, totalCardCount.value)];
 		}
 		else
 		{
@@ -109,7 +110,7 @@ public class Dealer : MonoBehaviour
 		for (int x = 0; x < deckMidPoint; x++)
 		{
 			lowerrHalfSwap = Random.Range(0, lowerRange + 1);
-			upperHalfSwap = Random.Range(upperRange + 1, totalCardCount);
+			upperHalfSwap = Random.Range(upperRange + 1, totalCardCount.value);
 			tempSwap = flashCardStack[lowerrHalfSwap];
 			flashCardStack[lowerrHalfSwap] = flashCardStack[upperHalfSwap];
 			flashCardStack[upperHalfSwap] = tempSwap;
@@ -123,14 +124,18 @@ public class Dealer : MonoBehaviour
 		// Get new card, and return
 
 		// Check that current card isnt last card.
-
-		index++;
-		if (index > flashCardStack.Count)
+		if (index < flashCardStack.Count - 1)
 		{
-			Debug.Log("End of game reshuffle and start again.");
+			index++;
+			currentCard = flashCardStack[index];
+			flashCardText.text = currentCard.Question;
 		}
-		currentCard = flashCardStack[index];
-		flashCardText.text = currentCard.Question;
+		else
+		{
+			// GameOver
+			gameController.GameOver();
+		}
+
 	}
 
 	public void Reveal()

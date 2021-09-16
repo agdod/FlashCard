@@ -3221,6 +3221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8904e7b42395d1847a5e652bbfc0cd59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameController: {fileID: 1660416052}
   flashCardText: {fileID: 600414388}
   timesTables:
   - {fileID: 11400000, guid: aa9d9c13c617e06468105c85461b8f4b, type: 2}
@@ -3234,7 +3235,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2f8d53999580adc4d82f0af19fe6b061, type: 2}
   - {fileID: 11400000, guid: 846cc15b1ac2aa24da0d6d502ce78755, type: 2}
   - {fileID: 11400000, guid: 9de2d9b6c18a8d24b9734374f06b2341, type: 2}
-  totalCardCount: 0
+  totalCardCount: {fileID: 11400000, guid: 37b29c011c162bd4286bef2124aca854, type: 2}
 --- !u!1 &1438636996
 GameObject:
   m_ObjectHideFlags: 0
