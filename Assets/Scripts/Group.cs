@@ -6,10 +6,18 @@ using UnityEngine;
 public class Group : ScriptableObject
 {
 	[SerializeField] private string identifier;
+	[SerializeField] private bool isActive;
 	[SerializeField] private List<FlashCard> multipliers;
+
+	public bool IsActive
+	{
+		get { return isActive; }
+		set { isActive = value; }
+	}
 
 	public List<FlashCard> Multipliers
 	{
 		get { return multipliers; }
 	}
+
 }

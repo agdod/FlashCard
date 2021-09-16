@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class SelectOptions : MonoBehaviour
 {
 	[SerializeField] private bool isSelected;
+	[SerializeField] private Group grouping;
 	[SerializeField] private Color selectedColor = new Color(245, 64, 64);
 	[SerializeField] private Color normalColor = new Color(250, 234, 96);
 	private Image image;
@@ -15,16 +16,29 @@ public class SelectOptions : MonoBehaviour
 		image = GetComponent<Image>();
 	}
 
-	public void OnButtoneSelected()
+	public void Selected()
 	{
-		isSelected = !isSelected;
+		image.color = selectedColor;
+		isSelected = true;
+		grouping.IsActive = true;
+	}
+
+	public void DeSelected()
+	{
+		image.color = normalColor;
+		isSelected = false;
+		grouping.IsActive = false;
+	}
+
+	public void OnButtonSelected()
+	{
 		if (isSelected == true)
 		{
-			image.color = selectedColor;
+			DeSelected();
 		}
 		else
 		{
-			image.color = normalColor;
+			Selected();
 		}
 	}
 }
