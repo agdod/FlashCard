@@ -42,7 +42,10 @@ public class Dealer : MonoBehaviour
 		int tablesCount = timesTables.Count;
 		for (int x = 0; x < tablesCount; x++)
 		{
-			totalCardCount += timesTables[x].Multipliers.Count;
+			if (timesTables[x].IsActive == true)
+			{
+				totalCardCount += timesTables[x].Multipliers.Count;
+			}
 		}
 	}
 
@@ -60,11 +63,13 @@ public class Dealer : MonoBehaviour
 		{
 			// Cache the current timesTables
 			tables = timesTables[tableCount];
-
-			for (int cardCount = 0; cardCount < tables.Multipliers.Count; cardCount++)
+			if (tables.IsActive == true)
 			{
-				// Add current Flash Card to the flash card Stack.
-				flashCardStack.Add(tables.Multipliers[cardCount]);
+				for (int cardCount = 0; cardCount < tables.Multipliers.Count; cardCount++)
+				{
+					// Add current Flash Card to the flash card Stack.
+					flashCardStack.Add(tables.Multipliers[cardCount]);
+				}
 			}
 		}
 		isShuffled = false;

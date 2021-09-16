@@ -1,13 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
-public class SelectAll : MonoBehaviour
+public class MainMenu : MonoBehaviour
 {
 	[SerializeField] private List<SelectOptions> selectOption;
-
-
 
 	public void SelectAllGroups()
 	{
@@ -23,5 +21,10 @@ public class SelectAll : MonoBehaviour
 		{
 			selectOption[x].DeSelected();
 		}
+	}
+
+	public void StartClicked()
+	{
+		SceneManager.LoadScene("Multiplication");
 	}
 }
