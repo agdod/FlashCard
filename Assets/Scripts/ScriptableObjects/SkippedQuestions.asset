@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa6c8c74a4dceff4c8456639af5db261, type: 3}
   m_Name: SkippedQuestions
   m_EditorClassIdentifier: 
-  value: 0
+  value: 7
