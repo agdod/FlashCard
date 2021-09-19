@@ -47,13 +47,13 @@ public class Dealer : MonoBehaviour
 		}
 		else
 		{
-			GameController.gamePrep += ShuffleFlashCards;
+			GameController.gamePrep += ReshuffleDeck;
 		}
 	}
 
 	public void InitailiseDealer()
 	{
-		GameController.gamePrep -= InitailiseDealer; // Unregister the Event from the Gamecontroller Class.
+		GameController.gamePrep -= InitailiseDealer; // Unregister the Event.
 		CountTotalFlashCards();
 		PrepareDeck();
 		ShuffleFlashCards();
@@ -72,12 +72,19 @@ public class Dealer : MonoBehaviour
 		}
 	}
 
+	private void ReshuffleDeck()
+	{
+		GameController.gamePrep -= ReshuffleDeck;
+
+		// Repopluate the FlashCardStack
+		PrepareDeck();
+		ShuffleFlashCards();
+	}
+
 	private void PrepareDeck()
 	{
-		// Deck is prepared and cached for use, so deck doesnt need to be repopluated if player wants to try again.
 		// Initalise the List for the FlashCardStack
 		flashCardStack = new List<FlashCard>(totalCardCount.value);
-
 		// Cycle trhough Tables and FlashCard list, filling Stack of Flash Cards		
 		Group tables;
 		int timesTableCount = timesTables.Count;
@@ -100,9 +107,7 @@ public class Dealer : MonoBehaviour
 
 	public void ShuffleFlashCards()
 	{
-
-		// Assign a array from 0 to total card count.
-		// Split array in half
+		// Split FlashCard Stack List in half
 		// Pick random location in first half, swap with random postion in second half.
 		// repeat unitl all first half has been swapped.
 

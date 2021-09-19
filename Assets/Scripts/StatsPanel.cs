@@ -44,7 +44,7 @@ public class StatsPanel : MonoBehaviour
 		SceneManager.LoadScene("MainMenu");
 	}
 
-	public void ReplayClciked()
+	public void ReplayClicked()
 	{
 		initDealer.value = false;
 		SceneManager.LoadScene("Multiplication");
