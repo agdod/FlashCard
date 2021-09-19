@@ -9,11 +9,6 @@ public class Group : ScriptableObject
 	[SerializeField] private bool isActive;
 	[SerializeField] private List<FlashCard> multipliers;
 
-	private void OnEnable()
-	{
-		isActive = false;
-	}
-
 	public bool IsActive
 	{
 		get { return isActive; }
