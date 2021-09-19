@@ -5,29 +5,45 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-	[SerializeField] private List<SelectOptions> selectOption;
 	[SerializeField] private BoolVariable initaliseDealer;
+
+	public delegate void ActionClick();
+	public static event ActionClick onSelected;
+	public static event ActionClick onDeselected;
+
+	public void Start()
+	{
+		// Reset all Selected Groups
+		CancelAll();
+	}
 
 	public void SelectAllGroups()
 	{
-		for (int x = 0; x < selectOption.Count; x++)
+		if (onSelected != null)
 		{
-			selectOption[x].Selected();
+			onSelected.Invoke();
 		}
 	}
 
 	public void CancelAll()
 	{
-		for (int x = 0; x < selectOption.Count; x++)
+		if (onDeselected != null)
 		{
-			selectOption[x].DeSelected();
+			onDeselected.Invoke();
 		}
 	}
 
 	public void StartClicked()
 	{
+		// -- TO DO --
+		// Check at least one selection has been made
+		// Check each group unitl one is found selected.
+		// Else raise dialg warning.
+
 		initaliseDealer.value = true;
 		SceneManager.LoadScene("Multiplication");
+
 	}
+
 
 }

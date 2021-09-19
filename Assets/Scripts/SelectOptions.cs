@@ -11,19 +11,30 @@ public class SelectOptions : MonoBehaviour
 	[SerializeField] private Color normalColor = new Color(250, 234, 96);
 	private Image image;
 
+	//public delegate void OnClicked(bool onSelected);
+	//public static event OnClicked onClicked;
+
+	public Group Grouping
+	{
+		get { return grouping; }
+	}
+
 	private void Awake()
 	{
 		image = GetComponent<Image>();
+		MainMenu.onSelected += Selected;
+		MainMenu.onDeselected += Deselect;
 	}
 
 	public void Selected()
 	{
+
 		image.color = selectedColor;
 		isSelected = true;
 		grouping.IsActive = true;
 	}
 
-	public void DeSelected()
+	public void Deselect()
 	{
 		image.color = normalColor;
 		isSelected = false;
@@ -34,7 +45,7 @@ public class SelectOptions : MonoBehaviour
 	{
 		if (isSelected == true)
 		{
-			DeSelected();
+			Deselect();
 		}
 		else
 		{
