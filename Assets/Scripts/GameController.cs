@@ -11,7 +11,6 @@ public class GameController : MonoBehaviour
 	[SerializeField] private IntVariable correctAnswer;
 	[SerializeField] private IntVariable skipped;
 	[SerializeField] private FloatVariable timeTaken;
-	[SerializeField] private BoolVariable initaliseDealer;
 	[SerializeField] private string[] countDown = { "GO!", "1", "2", "3" };
 
 	public delegate void GamePrep();
@@ -45,6 +44,18 @@ public class GameController : MonoBehaviour
 			yield return new WaitForEndOfFrame();
 		}
 		StartCoroutine(CountDown());
+	}
+
+	private IEnumerator CountDown()
+	{
+		int count = 4;
+		while (count > 0)
+		{
+			uIContoller.DisplayCountDown(countDown[count - 1]);
+			count--;
+			yield return new WaitForSeconds(1.0f);
+		}
+		StartNewGame();
 	}
 
 	private void StartNewGame()
@@ -108,15 +119,4 @@ public class GameController : MonoBehaviour
 		SceneManager.LoadScene("StatsMenu");
 	}
 
-	private IEnumerator CountDown()
-	{
-		int count = 4;
-		while (count > 0)
-		{
-			uIContoller.DisplayCountDown(countDown[count - 1]);
-			count--;
-			yield return new WaitForSeconds(1.0f);
-		}
-		StartNewGame();
-	}
 }
