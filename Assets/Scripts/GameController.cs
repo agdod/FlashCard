@@ -1,34 +1,65 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
 	[SerializeField] private Dealer dealer;
-	//[SerializeField] private TMPro.TMP_Text question;
 	[SerializeField] private TMPro.TMP_Text answer;
 	[SerializeField] private UIContoller uIContoller;
 	[SerializeField] private IntVariable correctAnswer;
 	[SerializeField] private IntVariable skipped;
+	[SerializeField] private FloatVariable timeTaken;
+	[SerializeField] private BoolVariable initaliseDealer;
+	[SerializeField] private string[] countDown = { "GO!", "1", "2", "3" };
+
+	public delegate void GamePrep();
+	public static GamePrep gamePrep;
 
 	private void Start()
 	{
-		uIContoller.ToggleDisplayFlashCard(true);
-		uIContoller.ToggleDisplayKeyPad(true);
-		uIContoller.ToggleNext(false);
+		Dealer.lastCard += GameOver;    // Register listener for event.
+		gamePrep += PrepareNewGame;
 		uIContoller.DisplayMessage(false);
+		gamePrep.Invoke();
 	}
 
-	public void NewGame()
+	private void PrepareNewGame()
 	{
+		gamePrep -= PrepareNewGame;     // Unregister from event.
+		StartCoroutine(PreGameSetup());
+	}
+
+	IEnumerator PreGameSetup()
+	{
+		// Display UI message whie deck is being shuffled.
+		uIContoller.ToggleDisplayFlashCard(false);
+		uIContoller.ToggleDisplayKeyPad(false);
+		uIContoller.ToggleNext(false);
+		uIContoller.DisplayCountDown(false);
+		while (!dealer.IsShuffled)
+		{
+			uIContoller.DisplayMessage("Shuffling deck....");
+			Debug.Log("in corountine shuffling deck");
+			yield return new WaitForEndOfFrame();
+		}
+		StartCoroutine(CountDown());
+	}
+
+	private void StartNewGame()
+	{
+		// Initalise values. Setup UI elements.
 		correctAnswer.value = 0;
 		skipped.value = 0;
+		timeTaken.value = Time.realtimeSinceStartup;
+		uIContoller.DisplayCountDown(false);
+		uIContoller.ToggleDisplayFlashCard(true);
+		DisplayNextCard();
 	}
 
 	public void DisplayNextCard()
 	{
-		/*FlashCard flashCard = dealer.DealFlashCard();
-		question.text = flashCard.Question;*/
 		uIContoller.ToggleNext(false);
 		uIContoller.DisplayMessage(false);
 		uIContoller.ToggleDisplayKeyPad(true);
@@ -38,7 +69,6 @@ public class GameController : MonoBehaviour
 
 	private void FlipFlashCard()
 	{
-		// Animate or rotate the Flash card to "show" the back side.
 		// Apply the answer to backside of card.
 		dealer.Reveal();
 		uIContoller.ToggleNext(true);
@@ -47,8 +77,7 @@ public class GameController : MonoBehaviour
 	public void Skip()
 	{
 		DisplayNextCard();
-		//FlipFlashCard();
-		//uIContoller.DisplayMessage(false);
+		skipped.value++;
 	}
 
 	public void CheckAnswer(string answer)
@@ -59,7 +88,6 @@ public class GameController : MonoBehaviour
 		{
 			uIContoller.DisplayMessage("Correct");
 			correctAnswer.value++;
-
 		}
 		else
 		{
@@ -67,11 +95,28 @@ public class GameController : MonoBehaviour
 		}
 	}
 
-	public void GameOver()
+	private void CollectTimeTaken()
 	{
-		// End of Deck
-		// Display Stats.
-		// Play again?
+		float newTime = Time.realtimeSinceStartup;
+		timeTaken.value = newTime - timeTaken.value;
 	}
 
+	public void GameOver()
+	{
+		Dealer.lastCard -= GameOver;    // Unregister from event.
+		CollectTimeTaken();
+		SceneManager.LoadScene("StatsMenu");
+	}
+
+	private IEnumerator CountDown()
+	{
+		int count = 4;
+		while (count > 0)
+		{
+			uIContoller.DisplayCountDown(countDown[count - 1]);
+			count--;
+			yield return new WaitForSeconds(1.0f);
+		}
+		StartNewGame();
+	}
 }

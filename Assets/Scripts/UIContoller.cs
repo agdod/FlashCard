@@ -9,6 +9,7 @@ public class UIContoller : MonoBehaviour
 	[SerializeField] private Canvas UICanvas;
 	[SerializeField] private GameObject nextButton;
 	[SerializeField] private TMPro.TMP_Text uiMessage;
+	[SerializeField] private TMPro.TMP_Text countDownText;
 
 	public void ToggleDisplayKeyPad(bool isActive)
 	{
@@ -40,4 +41,18 @@ public class UIContoller : MonoBehaviour
 	{
 		uiMessage.gameObject.SetActive(isActive);
 	}
+
+	public void DisplayCountDown(string countDown)
+	{
+		countDownText.gameObject.SetActive(true);
+		countDownText.text = countDown;
+	}
+
+	public void DisplayCountDown(bool isActive)
+	{
+		countDownText.gameObject.SetActive(isActive);
+	}
+
+
+
 }

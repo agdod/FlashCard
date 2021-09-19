@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class Dealer : MonoBehaviour
 {
-	[SerializeField] private GameController gameController;
+	//[SerializeField] private GameController gameController;
 	[SerializeField] private TMPro.TMP_Text flashCardText;
 	[SerializeField] private List<Group> timesTables;
 	[SerializeField] private IntVariable totalCardCount;
+	[SerializeField] private BoolVariable initaliseDealer;
 
 	private List<FlashCard> flashCardStack;
 	private int index = -1; // pointer for current flash card in stack
 	private bool isShuffled;
+
+	public delegate void Notify();
+	public static Notify lastCard;
 
 	private FlashCard currentCard;
 
@@ -30,17 +34,35 @@ public class Dealer : MonoBehaviour
 	// Shuffle cards
 	// Draw card from shuffled "deck"
 
-	private void Start()
+
+	private void Awake()
 	{
+		// Check for Dealer Satus 
+		// If initialsie is true, new selection is picked.
+		// If false, use old selection just reshuffle deck.
+
+		if (initaliseDealer.value == true)
+		{
+			GameController.gamePrep += InitailiseDealer;
+		}
+		else
+		{
+			GameController.gamePrep += ShuffleFlashCards;
+		}
+	}
+
+	public void InitailiseDealer()
+	{
+		GameController.gamePrep -= InitailiseDealer; // Unregister the Event from the Gamecontroller Class.
 		CountTotalFlashCards();
 		PrepareDeck();
 		ShuffleFlashCards();
-		DealFlashCard();
 	}
 
 	private void CountTotalFlashCards()
 	{
 		int tablesCount = timesTables.Count;
+		totalCardCount.value = 0;
 		for (int x = 0; x < tablesCount; x++)
 		{
 			if (timesTables[x].IsActive == true)
@@ -76,12 +98,15 @@ public class Dealer : MonoBehaviour
 		isShuffled = false;
 	}
 
-	private void ShuffleFlashCards()
+	public void ShuffleFlashCards()
 	{
+
 		// Assign a array from 0 to total card count.
 		// Split array in half
 		// Pick random location in first half, swap with random postion in second half.
 		// repeat unitl all first half has been swapped.
+
+		GameController.gamePrep -= ShuffleFlashCards;   // Unregister the Event from the Gamecontroller Class.
 
 		int deckMidPoint = totalCardCount.value / 2;
 
@@ -133,7 +158,10 @@ public class Dealer : MonoBehaviour
 		else
 		{
 			// GameOver
-			gameController.GameOver();
+			if (lastCard != null)
+			{
+				lastCard.Invoke();
+			}
 		}
 
 	}
