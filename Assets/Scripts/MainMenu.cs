@@ -3,18 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class MainMenu : MonoBehaviour
 {
 	[SerializeField] private BoolVariable initaliseDealer;
+	[SerializeField] private List<char> isOneActive;        //Used to keep tally is at least one grouping is selected
+	[SerializeField] private GameObject dialogBox;
 
 	public delegate void ActionClick();
 	public static event ActionClick onSelected;
 	public static event ActionClick onDeselected;
 
+	private void OnEnable()
+	{
+		SelectOptions.onActive += PlusOne;
+		SelectOptions.onDeactive += MinusOne;
+	}
+
 	public void Start()
 	{
 		// Reset all Selected Groups
 		CancelAll();
+	}
+
+	private void PlusOne()
+	{
+		// Adds an element to the isOneActive List
+		isOneActive.Add('*');
+
+	}
+
+	private void MinusOne()
+	{
+		// Removes an element from the isOneActive List
+		isOneActive.Remove('*');
 	}
 
 	public void SelectAllGroups()
@@ -35,15 +57,29 @@ public class MainMenu : MonoBehaviour
 
 	public void StartClicked()
 	{
-		// -- TO DO --
 		// Check at least one selection has been made
-		// Check each group unitl one is found selected.
 		// Else raise dialg warning.
-
-		initaliseDealer.value = true;
-		SceneManager.LoadScene("Multiplication");
-
+		if (isOneActive.Count > 0)
+		{
+			initaliseDealer.value = true;
+			SceneManager.LoadScene("Multiplication");
+		}
+		else
+		{
+			// Rasie dialog warning.
+			dialogBox.SetActive(true);
+		}
 	}
 
+	public void OkButtonClick()
+	{
+		dialogBox.SetActive(false);
+	}
 
+	private void OnDisable()
+	{
+		//Unregister from the Events
+		SelectOptions.onActive -= PlusOne;
+		SelectOptions.onDeactive -= MinusOne;
+	}
 }
