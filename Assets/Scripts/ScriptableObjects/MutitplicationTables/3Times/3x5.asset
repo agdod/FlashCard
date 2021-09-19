@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questionImage: {fileID: 0}
   answerImage: {fileID: 0}
-  question: ' 3 * 5'
+  question: 3 * 5
   answer: 15

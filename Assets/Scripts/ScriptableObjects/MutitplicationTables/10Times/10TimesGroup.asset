@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 10TimesGroup
   m_EditorClassIdentifier: 
   identifier: 10Times
+  isActive: 0
   multipliers:
   - {fileID: 11400000, guid: 120d085c854bc0d468ba92718b87b3f0, type: 2}
   - {fileID: 11400000, guid: d405a1f1bbbcd0c4ea4c766792dd8280, type: 2}
