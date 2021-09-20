@@ -2,20 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public enum Status
+{
+	CountingCards,
+	CardsCounted,
+	PreparingDeck,
+	DeckPrepared,
+	ShufflingDeck,
+	DeckShuffled,
+	EndOfDeck,
+	DroppedDeck
+}
+
 public class Dealer : MonoBehaviour
 {
-	//[SerializeField] private GameController gameController;
 	[SerializeField] private TMPro.TMP_Text flashCardText;
 	[SerializeField] private List<Group> timesTables;
 	[SerializeField] private IntVariable totalCardCount;
 	[SerializeField] private BoolVariable initaliseDealer;
+	[SerializeField] private bool onClicked = false;
 
 	private List<FlashCard> flashCardStack;
 	private int index = -1; // pointer for current flash card in stack
 	private bool isShuffled;
 
-	public delegate void Notify();
-	public static Notify lastCard;
+	[SerializeField] private Status status;
+
+	public delegate void DealerStatus(Status status);
+	public static event DealerStatus dealerStatus;
 
 	private FlashCard currentCard;
 
@@ -24,18 +39,12 @@ public class Dealer : MonoBehaviour
 		get { return currentCard; }
 	}
 
-	public bool IsShuffled
-	{
-		get { return isShuffled; }
-	}
-
 	// Get total amount of flash cards
 	// Get Amount of Flash Card in each Table
 	// Shuffle cards
 	// Draw card from shuffled "deck"
 
-
-	private void Awake()
+	private void OnEnable()
 	{
 		// Check for Dealer Satus 
 		// If initialsie is true, new selection is picked.
@@ -56,19 +65,31 @@ public class Dealer : MonoBehaviour
 		GameController.gamePrep -= InitailiseDealer; // Unregister the Event.
 		CountTotalFlashCards();
 		PrepareDeck();
-		ShuffleFlashCards();
 	}
 
 	private void CountTotalFlashCards()
 	{
+		int cardCount = 0;
 		int tablesCount = timesTables.Count;
+
+		if (dealerStatus != null)
+		{
+			dealerStatus(Status.CountingCards);
+		}
+
 		totalCardCount.value = 0;
 		for (int x = 0; x < tablesCount; x++)
 		{
 			if (timesTables[x].IsActive == true)
 			{
-				totalCardCount.value += timesTables[x].Multipliers.Count;
+				cardCount += timesTables[x].Multipliers.Count;
 			}
+		}
+		totalCardCount.value = cardCount;
+
+		if (dealerStatus != null)
+		{
+			dealerStatus(Status.CardsCounted);
 		}
 	}
 
@@ -78,11 +99,14 @@ public class Dealer : MonoBehaviour
 
 		// Repopluate the FlashCardStack
 		PrepareDeck();
-		ShuffleFlashCards();
 	}
 
 	private void PrepareDeck()
 	{
+		if (dealerStatus != null)
+		{
+			dealerStatus(Status.PreparingDeck);
+		}
 		// Initalise the List for the FlashCardStack
 		flashCardStack = new List<FlashCard>(totalCardCount.value);
 		// Cycle trhough Tables and FlashCard list, filling Stack of Flash Cards		
@@ -102,7 +126,22 @@ public class Dealer : MonoBehaviour
 				}
 			}
 		}
-		isShuffled = false;
+		if (flashCardStack.Count != 0)
+		{
+			if (dealerStatus != null)
+			{
+				dealerStatus(Status.DeckPrepared);
+			}
+			ShuffleFlashCards();
+		}
+		else
+		{
+			// Something went wrong deck is zero - unprepared.
+			if (dealerStatus != null)
+			{
+				dealerStatus(Status.DroppedDeck);
+			}
+		}
 	}
 
 	public void ShuffleFlashCards()
@@ -139,6 +178,10 @@ public class Dealer : MonoBehaviour
 
 		for (int x = 0; x < deckMidPoint; x++)
 		{
+			if (dealerStatus != null)
+			{
+				dealerStatus(Status.ShufflingDeck);
+			}
 			lowerrHalfSwap = Random.Range(0, lowerRange + 1);
 			upperHalfSwap = Random.Range(upperRange + 1, totalCardCount.value);
 			tempSwap = flashCardStack[lowerrHalfSwap];
@@ -146,6 +189,10 @@ public class Dealer : MonoBehaviour
 			flashCardStack[upperHalfSwap] = tempSwap;
 		}
 		isShuffled = true;
+		if (dealerStatus != null)
+		{
+			dealerStatus(Status.DeckShuffled);
+		}
 	}
 
 	public void DealFlashCard()
@@ -162,13 +209,11 @@ public class Dealer : MonoBehaviour
 		}
 		else
 		{
-			// GameOver
-			if (lastCard != null)
+			if (dealerStatus != null)
 			{
-				lastCard.Invoke();
+				dealerStatus(Status.EndOfDeck);
 			}
 		}
-
 	}
 
 	public void Reveal()

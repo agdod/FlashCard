@@ -53,6 +53,4 @@ public class UIContoller : MonoBehaviour
 		countDownText.gameObject.SetActive(isActive);
 	}
 
-
-
 }

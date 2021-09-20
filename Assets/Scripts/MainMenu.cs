@@ -66,6 +66,7 @@ public class MainMenu : MonoBehaviour
 		}
 		else
 		{
+			Debug.Log(" raise the dialog box from 1st scene.");
 			// Rasie dialog warning.
 			dialogBox.SetActive(true);
 		}

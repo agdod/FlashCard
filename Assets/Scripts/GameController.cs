@@ -12,13 +12,23 @@ public class GameController : MonoBehaviour
 	[SerializeField] private IntVariable skipped;
 	[SerializeField] private FloatVariable timeTaken;
 	[SerializeField] private string[] countDown = { "GO!", "1", "2", "3" };
+	[SerializeField] private Status gameStatus;
 
 	public delegate void GamePrep();
 	public static GamePrep gamePrep;
 
+	public delegate void DisplayDialog(string message, string buttonText);
+	public static event DisplayDialog displayDialog;
+
+	private void OnDisable()
+	{
+		Dealer.dealerStatus -= StatusResponse;
+	}
+
 	private void Start()
 	{
-		Dealer.lastCard += GameOver;    // Register listener for event.
+		Dealer.dealerStatus += StatusResponse;      //Register for dealer Status up date Event.
+
 		gamePrep += PrepareNewGame;
 		uIContoller.DisplayMessage(false);
 		gamePrep.Invoke();
@@ -26,24 +36,47 @@ public class GameController : MonoBehaviour
 
 	private void PrepareNewGame()
 	{
-		gamePrep -= PrepareNewGame;     // Unregister from event.
-		StartCoroutine(PreGameSetup());
+		gamePrep -= PrepareNewGame;                 // Unregister from event.
+		PreGameSetup();
 	}
 
-	IEnumerator PreGameSetup()
+	private void StatusResponse(Status status)
 	{
-		// Display UI message whie deck is being shuffled.
+		switch (status)
+		{
+			case Status.PreparingDeck:
+				Debug.Log("Preparing Deck");
+				break;
+			case Status.DeckPrepared:
+				Debug.Log("Deck prepared");
+				break;
+			case Status.ShufflingDeck:
+				Debug.Log("shuffling Deck");
+				uIContoller.DisplayMessage("Shuffling deck....");
+				break;
+			case Status.DeckShuffled:
+				Debug.Log("Deck shuffled");
+				uIContoller.DisplayMessage(false);
+				// Start countdown.
+				StartCoroutine(CountDown());
+				break;
+			case Status.DroppedDeck:
+				Debug.Log("Ooops somethng went wrong deck dropped");
+				DroppedDeck();
+				break;
+			case Status.EndOfDeck:
+				Debug.Log("End of deck");
+				GameOver();
+				break;
+		}
+	}
+
+	private void PreGameSetup()
+	{
 		uIContoller.ToggleDisplayFlashCard(false);
 		uIContoller.ToggleDisplayKeyPad(false);
 		uIContoller.ToggleNext(false);
 		uIContoller.DisplayCountDown(false);
-		while (!dealer.IsShuffled)
-		{
-			uIContoller.DisplayMessage("Shuffling deck....");
-			Debug.Log("in corountine shuffling deck");
-			yield return new WaitForEndOfFrame();
-		}
-		StartCoroutine(CountDown());
 	}
 
 	private IEnumerator CountDown()
@@ -112,11 +145,36 @@ public class GameController : MonoBehaviour
 		timeTaken.value = newTime - timeTaken.value;
 	}
 
+	private void DroppedDeck()
+	{
+		//Oops something went wrong 
+		if (displayDialog != null)
+		{
+			// Invoke dialog box.
+			displayDialog("Oops! Dealer dropped the deck. Retrun to selection menu.", "Selection");
+			// Register listener for button click.
+			DialogBox.onButtonClick += ReturnMainMenu;
+		}
+		else
+		{
+			Debug.Log("No listener for displayDailog");
+		}
+	}
+
+	// -- Scene Loading Rountines --
+
 	public void GameOver()
 	{
-		Dealer.lastCard -= GameOver;    // Unregister from event.
 		CollectTimeTaken();
 		SceneManager.LoadScene("StatsMenu");
 	}
+
+	private void ReturnMainMenu()
+	{
+		DialogBox.onButtonClick -= ReturnMainMenu;
+		SceneManager.LoadScene("MainMenu");
+	}
+
+
 
 }
