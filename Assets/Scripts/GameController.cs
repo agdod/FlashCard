@@ -103,12 +103,14 @@ public class GameController : MonoBehaviour
 
 	private void GetTimeStarted()
 	{
+		startGame -= GetTimeStarted;
 		timeTaken.value = Time.realtimeSinceStartup;
 	}
 
 	private void StartNewGame()
 	{
 		// Initalise values. Setup UI elements.
+		startGame -= StartNewGame;
 		correctAnswer.value = 0;
 		skipped.value = 0;
 	}
@@ -117,6 +119,7 @@ public class GameController : MonoBehaviour
 	{
 		// Unsubscribe from onbuttonClick event
 		DialogBox.onButtonClick -= DisplayNextCard;
+		startGame -= DisplayNextCard;
 		answer.text = "";
 		dealer.DealFlashCard();
 	}
