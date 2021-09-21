@@ -7,7 +7,6 @@ public class GameController : MonoBehaviour
 {
 	[SerializeField] private Dealer dealer;
 	[SerializeField] private TMPro.TMP_Text answer;
-	//[SerializeField] private UIContoller uIContoller;
 	[SerializeField] private IntVariable correctAnswer;
 	[SerializeField] private IntVariable skipped;
 	[SerializeField] private FloatVariable timeTaken;
@@ -16,6 +15,7 @@ public class GameController : MonoBehaviour
 
 	public delegate void GamePrep();
 	public static GamePrep gamePrep;
+	public static GamePrep startGame;
 
 	public delegate void DisplayDialog(string message, string buttonText);
 	public static event DisplayDialog displayDialog;
@@ -25,11 +25,23 @@ public class GameController : MonoBehaviour
 		Dealer.dealerStatus -= StatusResponse;
 	}
 
-	private void Start()
+	private void Awake()
+	{
+		RegisterforEvents();
+	}
+
+	private void RegisterforEvents()
 	{
 		Dealer.dealerStatus += StatusResponse;      //Register for dealer Status up date Event.
 
-		gamePrep += PrepareNewGame;
+		// Register for StartGame Event
+		startGame += StartNewGame;
+		startGame += GetTimeStarted;
+		startGame += DisplayNextCard;
+	}
+
+	private void Start()
+	{
 		gamePrep.Invoke();
 
 		// Check there is listners for displayDialog events
@@ -37,12 +49,6 @@ public class GameController : MonoBehaviour
 		{
 			Debug.LogError("No listeners for display dialog.");
 		}
-	}
-
-	private void PrepareNewGame()
-	{
-		gamePrep -= PrepareNewGame;                 // Unregister from event.
-		PreGameSetup();
 	}
 
 	private void StatusResponse(Status status)
@@ -76,16 +82,6 @@ public class GameController : MonoBehaviour
 		}
 	}
 
-	private void PreGameSetup()
-	{
-		/*
-		uIContoller.ToggleDisplayFlashCard(false);
-		uIContoller.ToggleDisplayKeyPad(false);
-		uIContoller.ToggleNext(false);
-		uIContoller.DisplayCountDown(false);
-		*/
-	}
-
 	private IEnumerator CountDown()
 	{
 		int count = 4;
@@ -98,7 +94,16 @@ public class GameController : MonoBehaviour
 			yield return new WaitForSeconds(1.0f);
 		}
 		displayDialog("", "");
-		StartNewGame();
+
+		if (startGame != null)
+		{
+			startGame.Invoke();
+		}
+	}
+
+	private void GetTimeStarted()
+	{
+		timeTaken.value = Time.realtimeSinceStartup;
 	}
 
 	private void StartNewGame()
@@ -106,16 +111,12 @@ public class GameController : MonoBehaviour
 		// Initalise values. Setup UI elements.
 		correctAnswer.value = 0;
 		skipped.value = 0;
-		timeTaken.value = Time.realtimeSinceStartup;
-		//uIContoller.ToggleDisplayFlashCard(true);
-		DisplayNextCard();
 	}
 
 	public void DisplayNextCard()
 	{
 		// Unsubscribe from onbuttonClick event
 		DialogBox.onButtonClick -= DisplayNextCard;
-		//uIContoller.ToggleDisplayKeyPad(true);
 		answer.text = "";
 		dealer.DealFlashCard();
 	}

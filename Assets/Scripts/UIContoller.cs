@@ -8,8 +8,12 @@ public class UIContoller : MonoBehaviour
 	[SerializeField] private Canvas flashCardCanvas;
 	[SerializeField] private Canvas UICanvas;
 	[SerializeField] private GameObject nextButton;
-	[SerializeField] private TMPro.TMP_Text uiMessage;
-	[SerializeField] private TMPro.TMP_Text countDownText;
+
+	private void Awake()
+	{
+		GameController.gamePrep += PreGameSetup;        //Subscribe to Events
+		GameController.startGame += StartNewGame;
+	}
 
 	public void ToggleDisplayKeyPad(bool isActive)
 	{
@@ -31,26 +35,21 @@ public class UIContoller : MonoBehaviour
 		nextButton.SetActive(isActive);
 	}
 
-	public void DisplayMessage(string message)
+	private void PreGameSetup()
 	{
-		uiMessage.text = message;
-		uiMessage.gameObject.SetActive(true);
+		GameController.gamePrep -= PreGameSetup;        //Unsubscribe from Event.
+														// Hide UI elements while prepaing deck/game.);
+		ToggleDisplayFlashCard(false);
+		ToggleDisplayKeyPad(false);
+		//DisplayCountDown(false);
 	}
 
-	public void DisplayMessage(bool isActive)
+	private void StartNewGame()
 	{
-		uiMessage.gameObject.SetActive(isActive);
-	}
-
-	public void DisplayCountDown(string countDown)
-	{
-		countDownText.gameObject.SetActive(true);
-		countDownText.text = countDown;
-	}
-
-	public void DisplayCountDown(bool isActive)
-	{
-		countDownText.gameObject.SetActive(isActive);
+		GameController.startGame -= StartNewGame;       // Unsubscribe from Event.
+														// Display UI elements
+		ToggleDisplayFlashCard(true);
+		ToggleDisplayKeyPad(true);
 	}
 
 }
