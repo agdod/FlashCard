@@ -13,6 +13,9 @@ public class DialogBox : MonoBehaviour
 	[SerializeField] private TMPro.TMP_Text buttonText;
 	[SerializeField] private RectTransform rectTransform;
 
+	private Vector2 cachedRectValues;
+	private bool rectValuesCached = false;
+
 	public delegate void OnButtonClick();
 	public static event OnButtonClick onButtonClick;
 
@@ -26,6 +29,13 @@ public class DialogBox : MonoBehaviour
 
 		rectTransform = GetComponent<RectTransform>();
 		dialogMask.gameObject.SetActive(false);
+		CacheValues();
+	}
+
+	private void CacheValues()
+	{
+		cachedRectValues = rectTransform.sizeDelta;
+		rectValuesCached = true;
 	}
 
 	private string LineWrap(string message)
@@ -60,7 +70,6 @@ public class DialogBox : MonoBehaviour
 		return formatMessage;
 	}
 
-
 	private void ResizeDialogBox(string message)
 	{
 		string formattedMessage = LineWrap(message);
@@ -78,18 +87,26 @@ public class DialogBox : MonoBehaviour
 
 	private void DisplayMessage(string message, string buttonTxt)
 	{
-		dialogMask.SetActive(true);
-		ResizeDialogBox(message);
-		if (buttonText != null)
+		if (message.Length == 0)
 		{
-			dialogButton.gameObject.SetActive(true);
-			buttonText.text = buttonTxt;
+			// No message to display diable dialog box and mask
+			dialogMask.SetActive(false);
+
 		}
 		else
 		{
-			dialogButton.gameObject.SetActive(false);
+			dialogMask.SetActive(true);
+			ResizeDialogBox(message);
+			if (buttonTxt != "")
+			{
+				dialogButton.gameObject.SetActive(true);
+				buttonText.text = buttonTxt;
+			}
+			else
+			{
+				dialogButton.gameObject.SetActive(false);
+			}
 		}
-
 	}
 
 	public void ButtonClick()
@@ -98,6 +115,15 @@ public class DialogBox : MonoBehaviour
 		if (onButtonClick != null)
 		{
 			onButtonClick.Invoke();
+		}
+	}
+
+	private void OnDisable()
+	{
+		//Reset the sizing of the dialog box.
+		if (rectValuesCached)
+		{
+			rectTransform.sizeDelta = cachedRectValues;
 		}
 	}
 
