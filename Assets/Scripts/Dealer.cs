@@ -168,7 +168,15 @@ public class Dealer : MonoBehaviour
 			upperRange = deckMidPoint + 1;
 			lowerRange = deckMidPoint - 1;
 			// Shuffle middle card
-			flashCardStack[deckMidPoint] = flashCardStack[Random.Range(0, totalCardCount.value)];
+
+			// Random position value to swap middle card wiht
+			int tempMiddleSwap = Random.Range(0, totalCardCount.value);
+			// Cache the middle card.
+			FlashCard tempMiddleCardSwap = flashCardStack[deckMidPoint];
+			// Move the random positon to the middle card postion
+			flashCardStack[deckMidPoint] = flashCardStack[tempMiddleSwap];
+			// Move the cached middlecard to the random postion.
+			flashCardStack[tempMiddleSwap] = tempMiddleCardSwap;
 		}
 		else
 		{
