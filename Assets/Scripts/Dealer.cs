@@ -21,6 +21,7 @@ public class Dealer : MonoBehaviour
 	[SerializeField] private List<Group> timesTables;
 	[SerializeField] private IntVariable totalCardCount;
 	[SerializeField] private BoolVariable initaliseDealer;
+	[SerializeField] private IntVariable remaingCards;
 	[SerializeField] private bool onClicked = false;
 
 	private List<FlashCard> flashCardStack;
@@ -86,6 +87,7 @@ public class Dealer : MonoBehaviour
 			}
 		}
 		totalCardCount.value = cardCount;
+		remaingCards.value = cardCount;
 
 		if (dealerStatus != null)
 		{
@@ -214,6 +216,7 @@ public class Dealer : MonoBehaviour
 			index++;
 			currentCard = flashCardStack[index];
 			flashCardText.text = currentCard.Question;
+			remaingCards.value--;
 		}
 		else
 		{
