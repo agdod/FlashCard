@@ -7,7 +7,7 @@ public class GameController : MonoBehaviour
 {
 	[SerializeField] private Dealer dealer;
 	[SerializeField] private TMPro.TMP_Text answer;
-	[SerializeField] private UIContoller uIContoller;
+	//[SerializeField] private UIContoller uIContoller;
 	[SerializeField] private IntVariable correctAnswer;
 	[SerializeField] private IntVariable skipped;
 	[SerializeField] private FloatVariable timeTaken;
@@ -30,8 +30,13 @@ public class GameController : MonoBehaviour
 		Dealer.dealerStatus += StatusResponse;      //Register for dealer Status up date Event.
 
 		gamePrep += PrepareNewGame;
-		uIContoller.DisplayMessage(false);
 		gamePrep.Invoke();
+
+		// Check there is listners for displayDialog events
+		if (displayDialog == null)
+		{
+			Debug.LogError("No listeners for display dialog.");
+		}
 	}
 
 	private void PrepareNewGame()
@@ -52,11 +57,11 @@ public class GameController : MonoBehaviour
 				break;
 			case Status.ShufflingDeck:
 				Debug.Log("shuffling Deck");
-				uIContoller.DisplayMessage("Shuffling deck....");
+				displayDialog("Shuffling Deck", "");
 				break;
 			case Status.DeckShuffled:
 				Debug.Log("Deck shuffled");
-				uIContoller.DisplayMessage(false);
+				displayDialog("", "");
 				// Start countdown.
 				StartCoroutine(CountDown());
 				break;
@@ -73,10 +78,12 @@ public class GameController : MonoBehaviour
 
 	private void PreGameSetup()
 	{
+		/*
 		uIContoller.ToggleDisplayFlashCard(false);
 		uIContoller.ToggleDisplayKeyPad(false);
 		uIContoller.ToggleNext(false);
 		uIContoller.DisplayCountDown(false);
+		*/
 	}
 
 	private IEnumerator CountDown()
@@ -84,10 +91,13 @@ public class GameController : MonoBehaviour
 		int count = 4;
 		while (count > 0)
 		{
-			uIContoller.DisplayCountDown(countDown[count - 1]);
+			// Display dialog box to force dialog rect to reset to cached value.
+			displayDialog("", "");
+			displayDialog(countDown[count - 1], "");
 			count--;
 			yield return new WaitForSeconds(1.0f);
 		}
+		displayDialog("", "");
 		StartNewGame();
 	}
 
@@ -97,16 +107,15 @@ public class GameController : MonoBehaviour
 		correctAnswer.value = 0;
 		skipped.value = 0;
 		timeTaken.value = Time.realtimeSinceStartup;
-		uIContoller.DisplayCountDown(false);
-		uIContoller.ToggleDisplayFlashCard(true);
+		//uIContoller.ToggleDisplayFlashCard(true);
 		DisplayNextCard();
 	}
 
 	public void DisplayNextCard()
 	{
-		uIContoller.ToggleNext(false);
-		uIContoller.DisplayMessage(false);
-		uIContoller.ToggleDisplayKeyPad(true);
+		// Unsubscribe from onbuttonClick event
+		DialogBox.onButtonClick -= DisplayNextCard;
+		//uIContoller.ToggleDisplayKeyPad(true);
 		answer.text = "";
 		dealer.DealFlashCard();
 	}
@@ -115,7 +124,6 @@ public class GameController : MonoBehaviour
 	{
 		// Apply the answer to backside of card.
 		dealer.Reveal();
-		uIContoller.ToggleNext(true);
 	}
 
 	public void Skip()
@@ -127,15 +135,16 @@ public class GameController : MonoBehaviour
 	public void CheckAnswer(string answer)
 	{
 		FlipFlashCard();
-		uIContoller.ToggleDisplayKeyPad(false);
 		if (answer == dealer.CurrentCard.Answer)
 		{
-			uIContoller.DisplayMessage("Correct");
+			displayDialog("Correct", "Next");
+			DialogBox.onButtonClick += DisplayNextCard;
 			correctAnswer.value++;
 		}
 		else
 		{
-			uIContoller.DisplayMessage("Wrong Answer");
+			displayDialog("Wrong", "Next");
+			DialogBox.onButtonClick += DisplayNextCard;
 		}
 	}
 

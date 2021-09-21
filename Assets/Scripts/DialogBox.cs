@@ -89,9 +89,8 @@ public class DialogBox : MonoBehaviour
 	{
 		if (message.Length == 0)
 		{
-			// No message to display diable dialog box and mask
+			// No message to display disable dialog box and mask
 			dialogMask.SetActive(false);
-
 		}
 		else
 		{
