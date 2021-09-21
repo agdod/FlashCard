@@ -14,6 +14,9 @@ public class MainMenu : MonoBehaviour
 	public static event ActionClick onSelected;
 	public static event ActionClick onDeselected;
 
+	public delegate void DisplayDialog(string message, string buttonTxt);
+	public static event DisplayDialog displayDialog;
+
 	private void OnEnable()
 	{
 		SelectOptions.onActive += PlusOne;
@@ -30,7 +33,6 @@ public class MainMenu : MonoBehaviour
 	{
 		// Adds an element to the isOneActive List
 		isOneActive.Add('*');
-
 	}
 
 	private void MinusOne()
@@ -68,13 +70,11 @@ public class MainMenu : MonoBehaviour
 		{
 			Debug.Log(" raise the dialog box from 1st scene.");
 			// Rasie dialog warning.
-			dialogBox.SetActive(true);
+			if (displayDialog != null)
+			{
+				displayDialog("Select at least one group.", "Ok");
+			}
 		}
-	}
-
-	public void OkButtonClick()
-	{
-		dialogBox.SetActive(false);
 	}
 
 	private void OnDisable()

@@ -8,6 +8,7 @@ public class DialogBox : MonoBehaviour
 	//[SerializeField] private GameObject dialogBox;
 	[SerializeField] private GameObject dialogBox;
 	[SerializeField] private GameObject dialogMask;
+	[SerializeField] private Button dialogButton;
 	[SerializeField] private TMPro.TMP_Text dialogText;
 	[SerializeField] private TMPro.TMP_Text buttonText;
 	[SerializeField] private RectTransform rectTransform;
@@ -21,13 +22,10 @@ public class DialogBox : MonoBehaviour
 	private void Awake()
 	{
 		GameController.displayDialog += DisplayMessage;
-		//this.gameObject.SetActive(false);
-		rectTransform = GetComponent<RectTransform>();
-	}
+		MainMenu.displayDialog += DisplayMessage;
 
-	private void Start()
-	{
-		ResizeDialogBox("This is a test string");
+		rectTransform = GetComponent<RectTransform>();
+		dialogMask.gameObject.SetActive(false);
 	}
 
 	private string LineWrap(string message)
@@ -42,8 +40,8 @@ public class DialogBox : MonoBehaviour
 			// Adjust length of message to account for additional <br>, 
 			int amountLineBreakChars = ((lineCount - 1) * 4);
 			int adjustedLength = formatMessage.Length - amountLineBreakChars;
-			// Check adding current word doesnt go over 20 chars in line
 
+			// Check adding current word doesnt go over 20 chars in line
 			if ((adjustedLength + words[x].Length) < (charsPerLine + charsInPreviousLines))
 			{
 				formatMessage += words[x] + " ";
@@ -81,8 +79,17 @@ public class DialogBox : MonoBehaviour
 	private void DisplayMessage(string message, string buttonTxt)
 	{
 		dialogMask.SetActive(true);
-		dialogText.text = message;
-		buttonText.text = buttonTxt;
+		ResizeDialogBox(message);
+		if (buttonText != null)
+		{
+			dialogButton.gameObject.SetActive(true);
+			buttonText.text = buttonTxt;
+		}
+		else
+		{
+			dialogButton.gameObject.SetActive(false);
+		}
+
 	}
 
 	public void ButtonClick()
@@ -94,8 +101,9 @@ public class DialogBox : MonoBehaviour
 		}
 	}
 
-	private void OnDisable()
+	private void OnDestroy()
 	{
 		GameController.displayDialog -= DisplayMessage;
+		MainMenu.displayDialog -= DisplayMessage;
 	}
 }
