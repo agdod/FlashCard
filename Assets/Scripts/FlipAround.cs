@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class FlipAround : MonoBehaviour
 {
@@ -21,10 +22,14 @@ public class FlipAround : MonoBehaviour
 			int count = multiplyGroup[x].Multipliers.Count;
 			for (int y = 0; y < count; y++)
 			{
-				Debug.Log((y + 2 )+ " * " + (x + 2) + " = " + (y + 2) * (x + 2));
+				Debug.Log((y + 2) + " * " + (x + 2) + " = " + (y + 2) * (x + 2));
 				int group = y + 2;
 				int multiple = x + 2;
 				multiplyGroup[x].Multipliers[y].Question = group.ToString() + " * " + multiple.ToString();
+				string assestPath = AssetDatabase.GetAssetPath(multiplyGroup[x].Multipliers[y].GetInstanceID());
+				string newName = group.ToString() + "x" + multiple.ToString();
+				AssetDatabase.RenameAsset(assestPath, newName);
+				AssetDatabase.SaveAssets();
 			}
 		}
 	}
