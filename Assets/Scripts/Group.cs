@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu]
+
 public class Group : ScriptableObject
 {
 	[SerializeField] private string identifier;

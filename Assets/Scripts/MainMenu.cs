@@ -14,7 +14,7 @@ public class MainMenu : MonoBehaviour
 	public static event ActionClick onSelected;
 	public static event ActionClick onDeselected;
 
-	public delegate void DisplayDialog(string message, string buttonTxt);
+	public delegate void DisplayDialog(string dialogMessage, DialogButton.style dialogBtn, string[] buttonTxt);
 	public static event DisplayDialog displayDialog;
 
 	private void OnEnable()
@@ -70,9 +70,10 @@ public class MainMenu : MonoBehaviour
 		{
 			Debug.Log(" raise the dialog box from 1st scene.");
 			// Rasie dialog warning.
+			string[] buttonText = { "Ok" };
 			if (displayDialog != null)
 			{
-				displayDialog("Select at least one group.", "Ok");
+				displayDialog("Select at least one group.", DialogButton.style.singleButton, buttonText);
 			}
 		}
 	}

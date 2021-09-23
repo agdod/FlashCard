@@ -17,7 +17,9 @@ public class GameController : MonoBehaviour
 	public static GamePrep gamePrep;
 	public static GamePrep startGame;
 
-	public delegate void DisplayDialog(string message, string buttonText);
+	// Dialog Box message , dialogButton Style, custom button text.
+
+	public delegate void DisplayDialog(string dialogMessage, DialogButton.style dialogButtonStyle, string[] buttonText);
 	public static event DisplayDialog displayDialog;
 
 	private void OnDisable()
@@ -63,11 +65,11 @@ public class GameController : MonoBehaviour
 				break;
 			case Status.ShufflingDeck:
 				Debug.Log("shuffling Deck");
-				displayDialog("Shuffling Deck", "");
+				displayDialog("Shuffling Deck", DialogButton.style.noButtons, null);
 				break;
 			case Status.DeckShuffled:
 				Debug.Log("Deck shuffled");
-				displayDialog("", "");
+				displayDialog("", DialogButton.style.noButtons, null);
 				// Start countdown.
 				StartCoroutine(CountDown());
 				break;
@@ -88,12 +90,12 @@ public class GameController : MonoBehaviour
 		while (count > 0)
 		{
 			// Display dialog box to force dialog rect to reset to cached value.
-			displayDialog("", "");
-			displayDialog(countDown[count - 1], "");
+			displayDialog("", DialogButton.style.noButtons, null);
+			displayDialog(countDown[count - 1], DialogButton.style.noButtons, null);
 			count--;
 			yield return new WaitForSeconds(1.0f);
 		}
-		displayDialog("", "");
+		displayDialog("", DialogButton.style.noButtons, null);
 
 		if (startGame != null)
 		{
@@ -118,7 +120,7 @@ public class GameController : MonoBehaviour
 	public void DisplayNextCard()
 	{
 		// Unsubscribe from onbuttonClick event
-		DialogBox.onButtonClick -= DisplayNextCard;
+		DialogBox.onConfrimButtonClick -= DisplayNextCard;
 		startGame -= DisplayNextCard;
 		answer.text = "";
 		dealer.DealFlashCard();
@@ -139,16 +141,18 @@ public class GameController : MonoBehaviour
 	public void CheckAnswer(string answer)
 	{
 		FlipFlashCard();
+		string[] buttonText = { "Next" };
 		if (answer == dealer.CurrentCard.Answer)
 		{
-			displayDialog("Correct", "Next");
-			DialogBox.onButtonClick += DisplayNextCard;
+
+			displayDialog("Correct", DialogButton.style.singleButton, buttonText);
+			DialogBox.onConfrimButtonClick += DisplayNextCard;
 			correctAnswer.value++;
 		}
 		else
 		{
-			displayDialog("Wrong", "Next");
-			DialogBox.onButtonClick += DisplayNextCard;
+			displayDialog("Wrong", DialogButton.style.singleButton, buttonText);
+			DialogBox.onConfrimButtonClick += DisplayNextCard;
 		}
 	}
 
@@ -164,9 +168,10 @@ public class GameController : MonoBehaviour
 		if (displayDialog != null)
 		{
 			// Invoke dialog box.
-			displayDialog("Oops! Dealer dropped the deck. Retrun to selection menu.", "Selection");
+			string[] buttonText = { "Selection" };
+			displayDialog("Oops! Dealer dropped the deck. Retrun to selection menu.", DialogButton.style.singleButton, buttonText);
 			// Register listener for button click.
-			DialogBox.onButtonClick += ReturnMainMenu;
+			DialogBox.onConfrimButtonClick += ReturnMainMenu;
 		}
 		else
 		{
@@ -184,10 +189,23 @@ public class GameController : MonoBehaviour
 
 	private void ReturnMainMenu()
 	{
-		DialogBox.onButtonClick -= ReturnMainMenu;
+		DialogBox.onConfrimButtonClick -= ReturnMainMenu;
 		SceneManager.LoadScene("MainMenu");
 	}
 
+	private void CancelRequest()
+	{
+		// On cancel button pressed unsubscribe from  confirmButtonClick event
+		DialogBox.onConfrimButtonClick -= ReturnMainMenu;
+	}
 
+	public void AreYouSure()
+	{
+		// verify player really wants to retrun to main menu.
+		string[] buttonText = { "Quit", "Resume" };
+		displayDialog("Are you sure you want to return to Main Menu?", DialogButton.style.dualButtons, buttonText);
+		DialogBox.onConfrimButtonClick += ReturnMainMenu;
+		DialogBox.onCancelButtonClick += CancelRequest;
+	}
 
 }

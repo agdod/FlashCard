@@ -9,6 +9,7 @@ public enum Status
 	CardsCounted,
 	PreparingDeck,
 	DeckPrepared,
+	RecountDeck,
 	ShufflingDeck,
 	DeckShuffled,
 	EndOfDeck,
@@ -75,6 +76,7 @@ public class Dealer : MonoBehaviour
 
 		if (dealerStatus != null)
 		{
+			status = Status.CardsCounted;
 			dealerStatus(Status.CountingCards);
 		}
 
@@ -91,6 +93,7 @@ public class Dealer : MonoBehaviour
 
 		if (dealerStatus != null)
 		{
+			status = Status.CardsCounted;
 			dealerStatus(Status.CardsCounted);
 		}
 	}
@@ -107,6 +110,7 @@ public class Dealer : MonoBehaviour
 	{
 		if (dealerStatus != null)
 		{
+			status = Status.PreparingDeck;
 			dealerStatus(Status.PreparingDeck);
 		}
 		// Initalise the List for the FlashCardStack
@@ -130,17 +134,33 @@ public class Dealer : MonoBehaviour
 		}
 		if (flashCardStack.Count != 0)
 		{
-			if (dealerStatus != null)
+			// check prepped deck == cardcount total
+
+			if (flashCardStack.Count != totalCardCount.value)
 			{
-				dealerStatus(Status.DeckPrepared);
+				// Card count not correct re initialise Dealer
+				status = Status.RecountDeck;
+				Debug.Log("Status : " + status);
+				InitailiseDealer();
+
 			}
-			ShuffleFlashCards();
+			else
+			{
+				if (dealerStatus != null)
+				{
+					status = Status.DeckPrepared;
+					dealerStatus(Status.DeckPrepared);
+				}
+				ShuffleFlashCards();
+			}
+
 		}
 		else
 		{
 			// Something went wrong deck is zero - unprepared.
 			if (dealerStatus != null)
 			{
+				status = Status.DroppedDeck;
 				dealerStatus(Status.DroppedDeck);
 			}
 		}
@@ -190,6 +210,7 @@ public class Dealer : MonoBehaviour
 		{
 			if (dealerStatus != null)
 			{
+				status = Status.ShufflingDeck;
 				dealerStatus(Status.ShufflingDeck);
 			}
 			lowerrHalfSwap = Random.Range(0, lowerRange + 1);
@@ -201,6 +222,7 @@ public class Dealer : MonoBehaviour
 		isShuffled = true;
 		if (dealerStatus != null)
 		{
+			status = Status.DeckShuffled;
 			dealerStatus(Status.DeckShuffled);
 		}
 	}
@@ -222,6 +244,7 @@ public class Dealer : MonoBehaviour
 		{
 			if (dealerStatus != null)
 			{
+				status = Status.EndOfDeck;
 				dealerStatus(Status.EndOfDeck);
 			}
 		}
