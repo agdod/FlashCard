@@ -5375,9 +5375,5 @@ PrefabInstance:
       propertyPath: m_Name
       value: DialogCanvas
       objectReference: {fileID: 0}
-    - target: {fileID: 8529042568334382808, guid: 7a733c83aecba19489277d3b7c40b7ff, type: 3}
-      propertyPath: m_text
-      value: Custom
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a733c83aecba19489277d3b7c40b7ff, type: 3}

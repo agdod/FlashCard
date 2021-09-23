@@ -24,6 +24,8 @@ public class FlashCard :ScriptableObject
 	public string Question
 	{
 		get { return question; }
+		// Temp set to write access to do convertion.
+		set { question = value; }
 	}
 
 	public string Answer
