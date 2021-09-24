@@ -120,7 +120,7 @@ public class GameController : MonoBehaviour
 	public void DisplayNextCard()
 	{
 		// Unsubscribe from onbuttonClick event
-		DialogBox.onConfrimButtonClick -= DisplayNextCard;
+		DialogBox.onConfirmButtonClick -= DisplayNextCard;
 		startGame -= DisplayNextCard;
 		answer.text = "";
 		dealer.DealFlashCard();
@@ -146,13 +146,13 @@ public class GameController : MonoBehaviour
 		{
 
 			displayDialog("Correct", DialogButton.style.singleButton, buttonText);
-			DialogBox.onConfrimButtonClick += DisplayNextCard;
+			DialogBox.onConfirmButtonClick += DisplayNextCard;
 			correctAnswer.value++;
 		}
 		else
 		{
 			displayDialog("Wrong", DialogButton.style.singleButton, buttonText);
-			DialogBox.onConfrimButtonClick += DisplayNextCard;
+			DialogBox.onConfirmButtonClick += DisplayNextCard;
 		}
 	}
 
@@ -171,7 +171,7 @@ public class GameController : MonoBehaviour
 			string[] buttonText = { "Selection" };
 			displayDialog("Oops! Dealer dropped the deck. Retrun to selection menu.", DialogButton.style.singleButton, buttonText);
 			// Register listener for button click.
-			DialogBox.onConfrimButtonClick += ReturnMainMenu;
+			DialogBox.onConfirmButtonClick += ReturnMainMenu;
 		}
 		else
 		{
@@ -189,14 +189,14 @@ public class GameController : MonoBehaviour
 
 	private void ReturnMainMenu()
 	{
-		DialogBox.onConfrimButtonClick -= ReturnMainMenu;
+		DialogBox.onConfirmButtonClick -= ReturnMainMenu;
 		SceneManager.LoadScene("MainMenu");
 	}
 
 	private void CancelRequest()
 	{
 		// On cancel button pressed unsubscribe from  confirmButtonClick event
-		DialogBox.onConfrimButtonClick -= ReturnMainMenu;
+		DialogBox.onConfirmButtonClick -= ReturnMainMenu;
 	}
 
 	public void AreYouSure()
@@ -204,7 +204,7 @@ public class GameController : MonoBehaviour
 		// verify player really wants to retrun to main menu.
 		string[] buttonText = { "Quit", "Resume" };
 		displayDialog("Are you sure you want to return to Main Menu?", DialogButton.style.dualButtons, buttonText);
-		DialogBox.onConfrimButtonClick += ReturnMainMenu;
+		DialogBox.onConfirmButtonClick += ReturnMainMenu;
 		DialogBox.onCancelButtonClick += CancelRequest;
 	}
 

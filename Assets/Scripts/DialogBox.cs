@@ -28,7 +28,7 @@ public class DialogBox : MonoBehaviour
 	private bool rectValuesCached = false;
 
 	public delegate void OnButtonClick();
-	public static event OnButtonClick onConfrimButtonClick;
+	public static event OnButtonClick onConfirmButtonClick;
 	public static event OnButtonClick onCancelButtonClick;
 
 	[SerializeField] int charsPerLine = 25;
@@ -195,9 +195,9 @@ public class DialogBox : MonoBehaviour
 	public void ButtonClick()
 	{
 		dialogMask.SetActive(false);
-		if (onConfrimButtonClick != null)
+		if (onConfirmButtonClick != null)
 		{
-			onConfrimButtonClick.Invoke();
+			onConfirmButtonClick.Invoke();
 		}
 	}
 
