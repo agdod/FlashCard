@@ -30,9 +30,9 @@ public class Dealer : MonoBehaviour
 	private bool isShuffled;
 
 	[SerializeField] private Status status;
-
+	/*
 	public delegate void DealerStatus(Status status);
-	public static event DealerStatus dealerStatus;
+	public static event DealerStatus dealerStatus;*/
 
 	private FlashCard currentCard;
 
@@ -54,17 +54,17 @@ public class Dealer : MonoBehaviour
 
 		if (initaliseDealer.value == true)
 		{
-			GameController.gamePrep += InitailiseDealer;
+			Events.gamePrep += InitailiseDealer;
 		}
 		else
 		{
-			GameController.gamePrep += ReshuffleDeck;
+			Events.gamePrep += ReshuffleDeck;
 		}
 	}
 
 	public void InitailiseDealer()
 	{
-		GameController.gamePrep -= InitailiseDealer; // Unregister the Event.
+		Events.gamePrep -= InitailiseDealer; // Unregister the Event.
 		CountTotalFlashCards();
 		PrepareDeck();
 	}
@@ -74,10 +74,10 @@ public class Dealer : MonoBehaviour
 		int cardCount = 0;
 		int tablesCount = timesTables.Count;
 
-		if (dealerStatus != null)
+		if (Events.dealerStatus != null)
 		{
 			status = Status.CardsCounted;
-			dealerStatus(Status.CountingCards);
+			Events.dealerStatus(Status.CountingCards);
 		}
 
 		totalCardCount.value = 0;
@@ -91,16 +91,16 @@ public class Dealer : MonoBehaviour
 		totalCardCount.value = cardCount;
 		remaingCards.value = cardCount;
 
-		if (dealerStatus != null)
+		if (Events.dealerStatus != null)
 		{
 			status = Status.CardsCounted;
-			dealerStatus(Status.CardsCounted);
+			Events.dealerStatus(Status.CardsCounted);
 		}
 	}
 
 	private void ReshuffleDeck()
 	{
-		GameController.gamePrep -= ReshuffleDeck;
+		Events.gamePrep -= ReshuffleDeck;
 
 		// Repopluate the FlashCardStack
 		PrepareDeck();
@@ -108,10 +108,10 @@ public class Dealer : MonoBehaviour
 
 	private void PrepareDeck()
 	{
-		if (dealerStatus != null)
+		if (Events.dealerStatus != null)
 		{
 			status = Status.PreparingDeck;
-			dealerStatus(Status.PreparingDeck);
+			Events.dealerStatus(Status.PreparingDeck);
 		}
 		// Initalise the List for the FlashCardStack
 		flashCardStack = new List<FlashCard>(totalCardCount.value);
@@ -146,10 +146,10 @@ public class Dealer : MonoBehaviour
 			}
 			else
 			{
-				if (dealerStatus != null)
+				if (Events.dealerStatus != null)
 				{
 					status = Status.DeckPrepared;
-					dealerStatus(Status.DeckPrepared);
+					Events.dealerStatus(Status.DeckPrepared);
 				}
 				ShuffleFlashCards();
 			}
@@ -158,10 +158,10 @@ public class Dealer : MonoBehaviour
 		else
 		{
 			// Something went wrong deck is zero - unprepared.
-			if (dealerStatus != null)
+			if (Events.dealerStatus != null)
 			{
 				status = Status.DroppedDeck;
-				dealerStatus(Status.DroppedDeck);
+				Events.dealerStatus(Status.DroppedDeck);
 			}
 		}
 	}
@@ -172,7 +172,7 @@ public class Dealer : MonoBehaviour
 		// Pick random location in first half, swap with random postion in second half.
 		// repeat unitl all first half has been swapped.
 
-		GameController.gamePrep -= ShuffleFlashCards;   // Unregister the Event from the Gamecontroller Class.
+		Events.gamePrep -= ShuffleFlashCards;   // Unregister the Event from the Gamecontroller Class.
 
 		int deckMidPoint = totalCardCount.value / 2;
 
@@ -208,10 +208,10 @@ public class Dealer : MonoBehaviour
 
 		for (int x = 0; x < deckMidPoint; x++)
 		{
-			if (dealerStatus != null)
+			if (Events.dealerStatus != null)
 			{
 				status = Status.ShufflingDeck;
-				dealerStatus(Status.ShufflingDeck);
+				Events.dealerStatus(Status.ShufflingDeck);
 			}
 			lowerrHalfSwap = Random.Range(0, lowerRange + 1);
 			upperHalfSwap = Random.Range(upperRange + 1, totalCardCount.value);
@@ -220,10 +220,10 @@ public class Dealer : MonoBehaviour
 			flashCardStack[upperHalfSwap] = tempSwap;
 		}
 		isShuffled = true;
-		if (dealerStatus != null)
+		if (Events.dealerStatus != null)
 		{
 			status = Status.DeckShuffled;
-			dealerStatus(Status.DeckShuffled);
+			Events.dealerStatus(Status.DeckShuffled);
 		}
 	}
 
@@ -242,10 +242,10 @@ public class Dealer : MonoBehaviour
 		}
 		else
 		{
-			if (dealerStatus != null)
+			if (Events.dealerStatus != null)
 			{
 				status = Status.EndOfDeck;
-				dealerStatus(Status.EndOfDeck);
+				Events.dealerStatus(Status.EndOfDeck);
 			}
 		}
 	}

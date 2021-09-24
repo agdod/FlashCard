@@ -10,9 +10,10 @@ public class SelectOptions : MonoBehaviour
 	[SerializeField] private Color normalColor = new Color(250, 234, 96);
 	private Image image;
 
+	/*
 	public delegate void OnClicked();
 	public static event OnClicked onActive;
-	public static event OnClicked onDeactive;
+	public static event OnClicked onDeactive;*/
 
 	public Group Grouping
 	{
@@ -25,8 +26,8 @@ public class SelectOptions : MonoBehaviour
 
 		// Register with the Events for select deselecting all.
 
-		MainMenu.onSelected += Selected;
-		MainMenu.onDeselected += Deselect;
+		Events.onSelected += Selected;
+		Events.onDeselected += Deselect;
 	}
 
 	public void Selected()
@@ -37,9 +38,9 @@ public class SelectOptions : MonoBehaviour
 			image.color = selectedColor;
 			grouping.IsActive = true;
 
-			if (onActive != null)
+			if (Events.onActive != null)
 			{
-				onActive();
+				Events.onActive();
 			}
 		}
 	}
@@ -52,9 +53,9 @@ public class SelectOptions : MonoBehaviour
 			image.color = normalColor;
 			grouping.IsActive = false;
 
-			if (onDeactive != null)
+			if (Events.onDeactive != null)
 			{
-				onDeactive();
+				Events.onDeactive();
 			}
 		}
 	}
@@ -74,7 +75,7 @@ public class SelectOptions : MonoBehaviour
 	private void OnDisable()
 	{
 		// Unregister from the Event method.
-		MainMenu.onSelected -= Selected;
-		MainMenu.onDeselected -= Deselect;
+		Events.onSelected -= Selected;
+		Events.onDeselected -= Deselect;
 	}
 }

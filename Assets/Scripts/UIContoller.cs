@@ -11,8 +11,8 @@ public class UIContoller : MonoBehaviour
 
 	private void Awake()
 	{
-		GameController.gamePrep += PreGameSetup;        //Subscribe to Events
-		GameController.startGame += StartNewGame;
+		Events.gamePrep += PreGameSetup;        //Subscribe to Events
+		Events.startGame += StartNewGame;
 	}
 
 	public void ToggleDisplayKeyPad(bool isActive)
@@ -37,7 +37,7 @@ public class UIContoller : MonoBehaviour
 
 	private void PreGameSetup()
 	{
-		GameController.gamePrep -= PreGameSetup;        //Unsubscribe from Event.
+		Events.gamePrep -= PreGameSetup;        //Unsubscribe from Event.
 														// Hide UI elements while prepaing deck/game.);
 		ToggleDisplayFlashCard(false);
 		ToggleDisplayKeyPad(false);
@@ -46,7 +46,7 @@ public class UIContoller : MonoBehaviour
 
 	private void StartNewGame()
 	{
-		GameController.startGame -= StartNewGame;       // Unsubscribe from Event.
+		Events.startGame -= StartNewGame;       // Unsubscribe from Event.
 														// Display UI elements
 		ToggleDisplayFlashCard(true);
 		ToggleDisplayKeyPad(true);

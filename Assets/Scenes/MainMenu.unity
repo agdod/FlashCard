@@ -1597,7 +1597,6 @@ GameObject:
   - component: {fileID: 607273934}
   - component: {fileID: 607273933}
   - component: {fileID: 607273932}
-  - component: {fileID: 607273935}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1670,32 +1669,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &607273935
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 607273931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32c26a9150b0cf54ca129c95809ecb61, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  multiplyGroup:
-  - {fileID: 11400000, guid: aa9d9c13c617e06468105c85461b8f4b, type: 2}
-  - {fileID: 11400000, guid: c7ce4f373437bfe40a16da8df9cadac3, type: 2}
-  - {fileID: 11400000, guid: 44a70f9a0ff4b3344be40e4afd4c8f58, type: 2}
-  - {fileID: 11400000, guid: 961bb9fa937ff2f479ea53590937771a, type: 2}
-  - {fileID: 11400000, guid: 6556c491d2566af4db7d2a0233a3042b, type: 2}
-  - {fileID: 11400000, guid: 96e7d8038de321142aa0821bcd50ba28, type: 2}
-  - {fileID: 11400000, guid: 2b383ebc1cb8e6e429aa3c9e4cce06c7, type: 2}
-  - {fileID: 11400000, guid: 79b801e0af6abf246ac215cf4b80346f, type: 2}
-  - {fileID: 11400000, guid: 2f8d53999580adc4d82f0af19fe6b061, type: 2}
-  - {fileID: 11400000, guid: 846cc15b1ac2aa24da0d6d502ce78755, type: 2}
-  - {fileID: 11400000, guid: 9de2d9b6c18a8d24b9734374f06b2341, type: 2}
-  multiplication: []
-  groupCount: 0
 --- !u!224 &665541520 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7608320031877073289, guid: c18604b5571cc414294233e030c1bc92, type: 3}

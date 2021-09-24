@@ -10,17 +10,18 @@ public class MainMenu : MonoBehaviour
 	[SerializeField] private List<char> isOneActive;        //Used to keep tally is at least one grouping is selected
 	[SerializeField] private GameObject dialogBox;
 
+	/*
 	public delegate void ActionClick();
 	public static event ActionClick onSelected;
 	public static event ActionClick onDeselected;
 
 	public delegate void DisplayDialog(string dialogMessage, DialogButton.style dialogBtn, string[] buttonTxt);
-	public static event DisplayDialog displayDialog;
+	public static event DisplayDialog displayDialog;*/
 
 	private void OnEnable()
 	{
-		SelectOptions.onActive += PlusOne;
-		SelectOptions.onDeactive += MinusOne;
+		Events.onActive += PlusOne;
+		Events.onDeactive += MinusOne;
 	}
 
 	public void Start()
@@ -43,17 +44,17 @@ public class MainMenu : MonoBehaviour
 
 	public void SelectAllGroups()
 	{
-		if (onSelected != null)
+		if (Events.onSelected != null)
 		{
-			onSelected.Invoke();
+			Events.onSelected.Invoke();
 		}
 	}
 
 	public void CancelAll()
 	{
-		if (onDeselected != null)
+		if (Events.onDeselected != null)
 		{
-			onDeselected.Invoke();
+			Events.onDeselected.Invoke();
 		}
 	}
 
@@ -71,9 +72,9 @@ public class MainMenu : MonoBehaviour
 			Debug.Log(" raise the dialog box from 1st scene.");
 			// Rasie dialog warning.
 			string[] buttonText = { "Ok" };
-			if (displayDialog != null)
+			if (Events.displayDialog != null)
 			{
-				displayDialog("Select at least one group.", DialogButton.style.singleButton, buttonText);
+				Events.displayDialog("Select at least one group.", DialogButton.style.singleButton, buttonText);
 			}
 		}
 	}
@@ -81,7 +82,7 @@ public class MainMenu : MonoBehaviour
 	private void OnDisable()
 	{
 		//Unregister from the Events
-		SelectOptions.onActive -= PlusOne;
-		SelectOptions.onDeactive -= MinusOne;
+		Events.onActive -= PlusOne;
+		Events.onDeactive -= MinusOne;
 	}
 }

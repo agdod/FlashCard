@@ -26,18 +26,18 @@ public class DialogBox : MonoBehaviour
 
 	private Vector2 cachedRectValues;
 	private bool rectValuesCached = false;
-
+	/*
 	public delegate void OnButtonClick();
 	public static event OnButtonClick onConfirmButtonClick;
-	public static event OnButtonClick onCancelButtonClick;
+	public static event OnButtonClick onCancelButtonClick;*/
 
 	[SerializeField] int charsPerLine = 25;
 	[SerializeField] int lineHeight = 30;
 
 	private void Awake()
 	{
-		GameController.displayDialog += DisplayDialogBox;
-		MainMenu.displayDialog += DisplayDialogBox;
+		Events.displayDialog += DisplayDialogBox;
+		//MainMenu.displayDialog += DisplayDialogBox;
 
 		rectTransform = GetComponent<RectTransform>();
 		dialogMask.gameObject.SetActive(false);
@@ -195,18 +195,18 @@ public class DialogBox : MonoBehaviour
 	public void ButtonClick()
 	{
 		dialogMask.SetActive(false);
-		if (onConfirmButtonClick != null)
+		if (Events.onConfirmButtonClick != null)
 		{
-			onConfirmButtonClick.Invoke();
+			Events.onConfirmButtonClick.Invoke();
 		}
 	}
 
 	public void CancelButtonClick()
 	{
 		dialogMask.SetActive(false);
-		if (onCancelButtonClick != null)
+		if (Events.onCancelButtonClick != null)
 		{
-			onCancelButtonClick.Invoke();
+			Events.onCancelButtonClick.Invoke();
 		}
 	}
 
@@ -221,7 +221,7 @@ public class DialogBox : MonoBehaviour
 
 	private void OnDestroy()
 	{
-		GameController.displayDialog -= DisplayDialogBox;
-		MainMenu.displayDialog -= DisplayDialogBox;
+		Events.displayDialog -= DisplayDialogBox;
+		//MainMenu.displayDialog -= DisplayDialogBox;
 	}
 }
